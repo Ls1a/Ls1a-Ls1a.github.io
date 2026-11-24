@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>代充最低价对比 · 分享版</title>
+<style>
+  :root{
+    --bg:#f7f8f7; --surface:#ffffff; --surface2:#eef3f1; --ink:#17211d; --ink2:#4c5a54; --ink3:#75837d;
+    --line:#dde5e1; --accent:#0e7a5f; --accent-ink:#ffffff; --accent-soft:#e2f2ec;
+    --gold:#b97f16; --gold-soft:#fdf3dd; --danger:#b3372c; --danger-soft:#fbeae8;
+    --wx:#07c160; --ali:#1677ff;
+    --radius:14px; --radius-s:9px;
+    --shadow:0 1px 2px rgba(20,40,33,.06),0 4px 14px rgba(20,40,33,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#101613; --surface:#182019; --surface2:#1f2a22;
+      --ink:#e9efec; --ink2:#a9bab2; --ink3:#7e8f87;
+      --line:#2b3a31; --accent:#2fae87; --accent-ink:#0b1512; --accent-soft:#173b30;
+      --gold:#e0aa3e; --gold-soft:#3a2f14; --danger:#e07a6e; --danger-soft:#40211d;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 14px rgba(0,0,0,.3);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
+    font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 16px 64px}
+  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* ---------- top strip ---------- */
+  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar-in{max-width:1060px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .topbar .t{font-weight:800;font-size:16px;letter-spacing:.2px}
+  .topbar .date{color:var(--ink2);font-size:13px}
+  .topbar .sp{flex:1}
+  .btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);
+    font:inherit;font-weight:700;font-size:14px;padding:7px 16px;border-radius:999px;cursor:pointer;min-height:36px}
+  .btn.ghost{background:transparent;color:var(--accent)}
+  .btn:active{transform:translateY(1px)}
+  nav.quick{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+  nav.quick a{border:1px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:999px;
+    padding:6px 13px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;min-height:32px}
+  nav.quick a:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
+
+  h1{font-size:27px;line-height:1.3;margin:22px 0 6px;font-weight:850;letter-spacing:.2px}
+  .lede{color:var(--ink2);margin:0 0 4px;max-width:46em}
+  h2{font-size:20px;font-weight:800;margin:38px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  h2 .sub{font-size:13px;color:var(--ink3);font-weight:500}
+  h3{font-size:16px;font-weight:750;margin:0 0 6px}
+  p{margin:6px 0}
+  .small{font-size:13px;color:var(--ink2)}
+  .tiny{font-size:12.5px;color:var(--ink3)}
+
+  /* ---------- lowest strip ---------- */
+  .lowest{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 6px}
+  .low-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;box-shadow:var(--shadow)}
+  .low-card .cat{font-size:13px;color:var(--ink2);font-weight:700}
+  .low-card .plan{font-size:12.5px;color:var(--ink3)}
+  .low-card .price{font-size:24px;font-weight:850;color:var(--accent);margin:2px 0 0}
+  .low-card .price small{font-size:13px;font-weight:600;color:var(--ink2)}
+  .low-card .from{font-size:12.5px;color:var(--ink2)}
+  @media (max-width:820px){ .lowest{grid-template-columns:repeat(2,1fr)} .low-card:last-child{grid-column:span 2} }
+  @media (max-width:420px){ .lowest{grid-template-columns:1fr 1fr} }
+
+  .notice{background:var(--gold-soft);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);border-radius:var(--radius);
+    padding:12px 15px;margin:14px 0;font-size:14px}
+  .notice b{color:var(--gold)}
+
+  /* ---------- tables ---------- */
+  .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin:10px 0 6px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px}
+  th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  th{background:var(--surface2);font-size:12.5px;color:var(--ink2);font-weight:700;letter-spacing:.4px}
+  tr:last-child td{border-bottom:none}
+  td.price{font-weight:800;font-size:16px}
+  tr.best td{background:var(--accent-soft)}
+  tr.best td.price{color:var(--accent)}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 7px;vertical-align:2px;margin-left:6px}
+  .tag.best{background:var(--accent);color:var(--accent-ink)}
+  .tag.warn{background:var(--gold-soft);color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent)}
+  .tag.risk{background:var(--danger-soft);color:var(--danger)}
+  .pay{display:inline-flex;gap:4px;flex-wrap:wrap}
+  .pay i{font-style:normal;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 7px;color:#fff}
+  .pay .wx{background:var(--wx)} .pay .ali{background:var(--ali)} .pay .usd{background:#8a94a6}
+  td .note{display:block;font-size:12.5px;color:var(--ink2);font-weight:400;margin-top:1px}
+  .sellbox{display:flex;gap:14px;flex-wrap:wrap;margin:8px 2px 0;font-size:14px}
+  .sellbox b{color:var(--accent)}
+  @media (max-width:720px){
+    table,thead,tbody,tr,td{display:block}
+    thead{display:none}
+    tr{border-bottom:1px solid var(--line);padding:6px 0}
+    tr:last-child{border-bottom:none}
+    td{border-bottom:none;padding:3px 14px}
+    td::before{content:attr(data-l);display:inline-block;min-width:4.6em;font-size:12px;color:var(--ink3);font-weight:600;margin-right:8px}
+    td.price{font-size:18px}
+  }
+
+  /* ---------- cards & steps ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr} }
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;box-shadow:var(--shadow)}
+  .card h3{margin-bottom:2px}
+  .card .why,.card .check{font-size:14px;color:var(--ink2);margin:5px 0}
+  .card .why b,.card .check b{color:var(--ink)}
+  .script{background:var(--surface2);border-radius:var(--radius-s);padding:11px 13px;font-size:14px;margin:9px 0 7px;white-space:pre-wrap}
+  .card .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .warranty{font-size:12.5px;color:var(--gold);font-weight:700}
+  .copy-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--accent);
+    font:inherit;font-size:13px;font-weight:700;border-radius:8px;padding:5px 13px;cursor:pointer;min-height:36px}
+  .copy-btn:hover{border-color:var(--accent)}
+
+  .steps{display:grid;gap:12px;margin:12px 0}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;box-shadow:var(--shadow);display:flex;gap:15px}
+  .step .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
+    font-weight:850;display:flex;align-items:center;justify-content:center;font-size:16px;margin-top:2px}
+  .step ul{margin:5px 0 2px;padding-left:19px}
+  .step li{margin:3px 0;font-size:14.5px}
+  .step li::marker{color:var(--accent)}
+
+  .checklist{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 17px;box-shadow:var(--shadow);margin:12px 0}
+  .checklist li{list-style:none;position:relative;padding:11px 0 11px 34px;border-bottom:1px solid var(--line);font-size:15px}
+  .checklist li:last-child{border-bottom:none}
+  .checklist{padding-left:17px}
+  .checklist ul{margin:0;padding:0}
+  .checklist li::before{content:"";position:absolute;left:2px;top:13px;width:19px;height:19px;border-radius:6px;
+    border:2px solid var(--accent);background:var(--accent-soft)}
+  .checklist li b{display:block}
+  .checklist li span{color:var(--ink2);font-size:13.5px}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+  @media (max-width:760px){ .two{grid-template-columns:1fr} }
+  .two .card ol{margin:6px 0 2px;padding-left:20px}
+  .two .card li{margin:4px 0;font-size:14.5px}
+  .two .card li::marker{color:var(--accent);font-weight:700}
+
+  /* ---------- calculator ---------- */
+  .calc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:var(--shadow);margin:12px 0}
+  .calc .row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+  .calc label{font-size:13px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px}
+  .calc select,.calc input{font:inherit;font-size:15px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;
+    background:var(--surface);color:var(--ink);min-height:40px}
+  .calc select{min-width:210px;max-width:100%}
+  .calc input{width:120px}
+  .calc .out{display:flex;gap:22px;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
+  .calc .out div b{display:block;font-size:21px;color:var(--accent)}
+  .calc .out div span{font-size:12.5px;color:var(--ink2)}
+
+  .log{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px 17px;box-shadow:var(--shadow);margin:12px 0}
+  .log div{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+  .log div:last-child{border-bottom:none}
+  .log .d{font-weight:800;color:var(--accent);white-space:nowrap}
+  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:16px;color:var(--ink3);font-size:13px}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);
+    padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:88vw;text-align:center}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <span class="t">代充比价 · 分享版</span>
+  <span class="date">价格核实：2026-11-20（北京时间）</span>
+  <span class="sp"></span>
+  <button class="btn ghost" id="refreshBtn" type="button">刷新价格</button>
+</div></div>
+
+<div class="wrap">
+  <h1>五类代充最低价对比</h1>
+  <p class="lede">只比能用<strong>微信 / 支付宝</strong>付款的渠道：ChatGPT、Claude、Gemini、多邻国、X。每个品类逐站比价，最低价高亮，点渠道名直达下单页。价格每天核一次，本页是 2026-11-20 的核实快照，下单前请在站内再核一眼实时价。</p>
+
+  <nav class="quick">
+    <a href="#compare">逐站比价</a><a href="#channels">渠道链接总表</a><a href="#ph">菲区怎么用</a>
+    <a href="#precheck">接单预检</a><a href="#risks">风险与话术</a><a href="#flow">操作流程</a><a href="#calc">利润计算器</a>
+  </nav>
+
+  <div class="lowest" id="lowestStrip"></div>
+
+  <div class="notice"><b>定价规矩（本页卖价按此执行）：</b>每单赚 ¥20–100；Claude 可以多赚一点；ChatGPT 完全跟国内市场价走 —— Plus ¥168、Pro 100 ¥850、Pro 200 ¥1,300；Claude Pro ¥249、Max 5x ¥999。</div>
+
+  <h2 id="compare">逐站比价 <span class="sub">同一品类内按价格从低到高，最低价高亮</span></h2>
+  <div id="compareRoot"></div>
+
+  <h2 id="channels">渠道链接总表 <span class="sub">点站名直达下单页；没有公开下单页的渠道如实标注，不编链接</span></h2>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>渠道</th><th>类型</th><th>在售品类</th><th>支付</th><th>备注</th></tr></thead>
+    <tbody>
+      <tr><td data-l="渠道"><a href="https://16688.com.cn" target="_blank" rel="noopener"><b>16688 发卡平台</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT / Claude / Gemini / 多邻国等全品类</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">进站搜店铺号 <b>S571979</b>；菲区卡充、官网直充、Pro 菲区直充都在这进货</td></tr>
+      <tr><td data-l="渠道"><a href="https://wzyp.cn" target="_blank" rel="noopener"><b>链动小铺</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT 等多品类（多家店铺）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i></span></td><td data-l="备注">老域名 ldxp.cn 会自动跳到 wzyp.cn；平台是店铺集合，进站后进具体店挑货，店铺页形如 wzyp.cn/shop/…；据店铺说明仅支持微信</td></tr>
+      <tr><td data-l="渠道"><a href="https://okai66.com" target="_blank" rel="noopener"><b>OKAI66</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">在线付款另收约 2% 手续费；加客服下单免手续费；失败原路退款</td></tr>
+      <tr><td data-l="渠道"><a href="https://www.ezsub.com/subscription/chatgpt-recharge" target="_blank" rel="noopener"><b>EzSub</b></a></td><td data-l="类型">直充（自助）</td><td data-l="品类">ChatGPT Plus / Pro、Codex 点数</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">此链接是真正的下单站（不是介绍博客页）；站内以美元标价，支持微信 / 支付宝付款；自助提交账号信息开通，约 15 分钟</td></tr>
+      <tr><td data-l="渠道"><a href="https://uppluspro.com/recharge" target="_blank" rel="noopener"><b>UpPlusPro</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">Pro 100 ¥710 是本轮核到的全网低价之一，下单前再核实时价</td></tr>
+      <tr><td data-l="渠道"><a href="https://xiaoxiao.pro" target="_blank" rel="noopener"><b>小小AI</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注">加企业微信客服下单</td></tr>
+      <tr><td data-l="渠道"><a href="https://claudemax.shop" target="_blank" rel="noopener"><b>ClaudeMax</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude Pro / Max 5x / Max 20x</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i></span></td><td data-l="备注">Max 5x 代充 ¥999；Pro 代充时有售罄，下单前看站内状态</td></tr>
+      <tr><td data-l="渠道"><a href="https://littlemagic8.github.io/gptplus/purchase-grok.html" target="_blank" rel="noopener"><b>Littlemagic8</b></a></td><td data-l="类型">卡密自助</td><td data-l="品类">X（新版 X Subscription / Grok）、ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">此链接为核实过的 X Premium ¥89 购买页；买卡密后在充值系统提交 sso 自助到账，不交账号密码</td></tr>
+      <tr><td data-l="渠道"><a href="https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html" target="_blank" rel="noopener"><b>瑶瑶商城</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude / Gemini / ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">Claude Pro ¥159、Gemini Pro 6 个月 ¥99 在这家较便宜；链接为其说明页，内有商城入口</td></tr>
+      <tr><td data-l="渠道"><a href="https://www.dunling.com/gemini" target="_blank" rel="noopener"><b>盾灵</b></a></td><td data-l="类型">直充</td><td data-l="品类">Gemini（Google AI Pro / Ultra）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注">Pro 6 个月 ¥88（含服务费），质保 2 个月；价格更新于 2026-11-17</td></tr>
+      <tr><td data-l="渠道"><b>菲区渠道</b>（卡充 / 直充）</td><td data-l="类型">进货（经店家）</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><b>无公开下单页</b>，在 16688 平台内找菲区商品下单；下单前向渠道方索要链接并核对</td></tr>
+      <tr><td data-l="渠道"><b>教育认证渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">Gemini 教育优惠等</td><td data-l="支付">—</td><td data-l="备注"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</td></tr>
+      <tr><td data-l="渠道"><b>土耳其区渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">多邻国等区域价商品</td><td data-l="支付">—</td><td data-l="备注"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</td></tr>
+    </tbody>
+  </table></div>
+  <p class="tiny">说明：16688 与链动小铺都是发卡 / 店铺平台，同一平台内不同店铺价格、质保不一样，进货时认准店铺和商品说明，不要只看平台名。</p>
+
+  <h2 id="ph">菲区渠道怎么用 <span class="sub">卖家不用自己碰菲律宾 IP 和外卡，买现成卡 / 直充，让店家操作</span></h2>
+  <div class="two">
+    <div class="card">
+      <h3>方式一：菲区卡充（卡密自兑）</h3>
+      <p class="small">适合 ChatGPT Plus。在 16688 下单后店家给一串卡密 + 兑换链接，卡密一般可囤 1 周。</p>
+      <ol>
+        <li>先按下方「接单预检」确认买家账号是 Free、不在 Team 里；</li>
+        <li>在 16688 搜「Plus 菲区卡充」下单，支付宝 / 微信付款；</li>
+        <li>把卡密和兑换链接发给买家，买家按页面引导自己兑换；</li>
+        <li>让买家到 ChatGPT「设置 → 订阅」确认显示 Plus，截图回传再确认收货。</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h3>方式二：菲区直充（店家充到号上）</h3>
+      <p class="small">适合 Pro 100 / Pro 200，差价主要靠这个赚。</p>
+      <ol>
+        <li>买家在闲鱼下单后，你去 16688 下一单菲区直充；</li>
+        <li>下单时只填买家的 ChatGPT 账号邮箱，正规直充不需要密码；</li>
+        <li>店家用菲律宾区价格扣费开通，充好后通知你；</li>
+        <li>让买家在「设置 → 订阅」核对显示 Pro，再交付确认。</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card">
+    <h3>差价从哪来（2026-11 核实数字）</h3>
+    <p>菲律宾区官方价：Plus ₱1,100/月（含 12% 税），Pro 200 ₱8,919.64/月，按 11 月汇率折合约 <b>¥931</b>；美区 Pro 200 是 $200，折合约 <b>¥1,336</b>，差 ¥400 多。店家菲区稳渠道做到 Pro 100 ¥755.20、Pro 200 ¥1,212，你卖 ¥850 / ¥1,300，每单约 ¥90–95 毛利。</p>
+    <p><b>Plus 别死磕菲区：</b>16688 官网正价直充 ¥132.23 反而比菲区卡充 ¥134.81 便宜，竑予 ¥120.5 更低。Plus 走官网直充，Pro 走菲区直充。</p>
+    <h3 style="margin-top:12px">进阶：自己动手充菲区（不用店家时）</h3>
+    <ol>
+      <li>备菲律宾 IP，全程全局模式，住宅 IP 更稳，机房 IP 容易被风控拦；</li>
+      <li>无痕模式打开 chatgpt.com，确认价格显示 ₱1,100 而不是美元；</li>
+      <li>账号必须是没用美元付过费的 Free 号，否则币种锁死改不过来；</li>
+      <li>付款用海外卡（国内卡网页端直接拒付），账单地址国家选美国、填免税州（如 Oregon, Portland 97201），税归零后 Plus 实付 ₱982.14，约 ¥106；</li>
+      <li>Pro 200 同样操作应显示 ₱8,919.64，确认价格无误再点订阅；续费按月从这张卡自动扣，续费前以页面价为准。</li>
+    </ol>
+  </div>
+
+  <h2 id="precheck">接单前预检清单 <span class="sub">收款前先问完这四件事，能省掉绝大多数售后</span></h2>
+  <div class="checklist"><ul>
+    <li><b>账号现在是 Free 吗？</b><span>让买家打开 chatgpt.com → 左下角头像 → 设置 → 订阅。显示 Free 才能充卡充 / 多数直充；显示 Plus / Pro 和到期日，要先取消自动续费、等刷回 Free。</span></li>
+    <li><b>账号在 Team 空间里吗？</b><span>设置 → 工作区 / 团队里有 Team 名字就是在团队里，个人卡充不进去，要先退出 Team 或换个人号。</span></li>
+    <li><b>号是自己注册的，还是买来的成品号？以前用过低价卡吗？</b><span>买来的号、用过 0 元购 / 黑充 / 低价 CDK 的号属于风险号：可以接，但先把质保说清 —— 只保订阅本身，掉订阅按未用天数比例退，封号 / 风控不保。</span></li>
+    <li><b>以前用美元付过费吗？</b><span>让买家看设置 → 账单记录：用美元付过费的号币种会被锁死，走不了菲区价；有 $0 订单或欠费账单的，也先如实告诉你再定渠道。</span></li>
+  </ul></div>
+
+  <h2 id="risks">风险说明与买家问答 <span class="sub">每种情况：出什么问题、为什么、买家怎么查、你怎么回（话术可一键复制）</span></h2>
+  <div class="grid" id="riskGrid"></div>
+
+  <h2 id="flow">完整操作流程 <span class="sub">从准备到售后，照着走就能开张</span></h2>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div>
+      <h3>备齐账号、软件和启动资金（约 ¥600）</h3>
+      <ul>
+        <li>闲鱼账号（实名、绑定支付宝收款）、微信 / 支付宝各留一个能正常收款的号；</li>
+        <li>进货账号：16688、链动小铺先注册好，OKAI66、EzSub、UpPlusPro、小小AI 收藏下单页；</li>
+        <li>启动资金约 ¥600：先垫进货款 + 留一笔售后备用金，掉订阅按天退款时不用临时凑钱；</li>
+        <li>建一个简单表格记账：日期、品类、买家、进货价、卖价、渠道、到期日，售后查单全靠它。</li>
+      </ul></div></div>
+    <div class="step"><div class="n">2</div><div>
+      <h3>先小额试单，把全流程跑通一遍</h3>
+      <ul>
+        <li>在 16688 用最小金额买一张 Plus 菲区卡充（¥134.81）或官网直充（¥132.23），充到自己账号上；</li>
+        <li>完整走一遍：下单 → 拿卡密 → 兑换 → 设置里确认 Plus → 截图留底；</li>
+        <li>试单没跑通之前不要上架接单，买家的问题你答不上来最伤口碑。</li>
+      </ul></div></div>
+    <div class="step"><div class="n">3</div><div>
+      <h3>按三条规矩定价</h3>
+      <ul>
+        <li>每单赚 ¥20–100，不打价格战到底；</li>
+        <li>ChatGPT 跟国内市场价：Plus ¥168、Pro 100 ¥850、Pro 200 ¥1,300，不轻易破价；</li>
+        <li>Claude 多赚一点：Pro ¥249、Max 5x ¥999；Gemini、多邻国、X 按进货价 +¥20–100 定，见比价表。</li>
+      </ul></div></div>
+    <div class="step"><div class="n">4</div><div>
+      <h3>闲鱼上架</h3>
+      <ul>
+        <li>标题写清品类 + 档位 + 卖点，如「ChatGPT Plus 代充 月卡 充自己号 不要密码 秒到账」；</li>
+        <li>详情里必须提前写清质保：<b>只保订阅本身，掉订阅按未用天数比例退；封号 / 风控不保；风险号可接、下单即视为接受此条款</b>；</li>
+        <li>详情里放预检提醒：下单前先确认账号是 Free、不在 Team 里，省得拍下后充不进去来回扯。</li>
+      </ul></div></div>
+    <div class="step"><div class="n">5</div><div>
+      <h3>接单与交付</h3>
+      <ul>
+        <li>收款前先走一遍上方「接单预检」四问，确认能充再收钱；</li>
+        <li>卡充类：把卡密 + 兑换链接发给买家，盯着他兑换完；直充类：只收买家邮箱下单，<b>永远不问买家要密码</b>；</li>
+        <li>让买家到对应 App 的「设置 → 订阅」确认档位和到期日，截图回传，你再点发货、请他确认收货。</li>
+      </ul></div></div>
+    <div class="step"><div class="n">6</div><div>
+      <h3>售后与避坑</h3>
+      <ul>
+        <li>掉订阅：先分清是渠道问题（按未用天数比例退）还是账号被封（不保），回复话术见上方风险卡；</li>
+        <li>X 只卖月卡，不卖年卡，周期越长售后越不可控；</li>
+        <li>多邻国自己开家庭组当组长，座位和到期日自己可控，别买来路不明的现成组；</li>
+        <li>进货价每天都可能变，接到大单（Pro 200、Max）先去渠道页核实时价再报价。</li>
+      </ul></div></div>
+  </div>
+
+  <h2 id="calc">利润计算器 <span class="sub">选品类、改卖价，立刻算每单 / 10 单 / 100 单利润；可把卖价应用回上方价目表（仅本次打开有效）</span></h2>
+  <div class="calc">
+    <div class="row">
+      <div><label for="calcProduct">品类</label><select id="calcProduct"></select></div>
+      <div><label for="calcCost">进货价（¥）</label><input id="calcCost" type="number" min="0" step="0.01" /></div>
+      <div><label for="calcSell">闲鱼卖价（¥）</label><input id="calcSell" type="number" min="0" step="1" /></div>
+      <div><button class="btn" id="applySell" type="button">应用到价目表</button></div>
+    </div>
+    <div class="out">
+      <div><b class="num" id="outOne">—</b><span>每单利润</span></div>
+      <div><b class="num" id="outMargin">—</b><span>利润率</span></div>
+      <div><b class="num" id="out10">—</b><span>10 单利润</span></div>
+      <div><b class="num" id="out100">—</b><span>100 单利润</span></div>
+    </div>
+    <p class="tiny" id="calcHint" style="margin-top:10px"></p>
+  </div>
+
+  <h2>核价记录</h2>
+  <div class="log">
+    <div><span class="d">2026-11-20</span><span>全渠道复核：新增链动小铺（wzyp.cn）、UpPlusPro、小小AI 进总表；EzSub 改链真正的下单站 ezsub.com；Littlemagic8 的 X Premium ¥89 购买页已核实可打开。</span></div>
+    <div><span class="d">2026-11-16</span><span>16688 店铺价核对：Plus 官网直充 ¥132.23、菲区卡充 ¥134.81、iOS 美区 ¥146.40；链动小铺 Plus 菲区卡充 ¥139.50。</span></div>
+    <div><span class="d">2026-11-11</span><span>OKAI66 套餐页核对：Plus ¥165–167、Pro 100 ¥830、Pro 200 ¥1,500，在线付款另收约 2% 手续费。</span></div>
+  </div>
+
+  <footer>
+    <p>本页为分享版比价快照，价格核实于 2026-11-20，各渠道价格、库存、质保随时会变，下单前请以渠道下单页实时显示为准。本页只做价格与流程整理，不代收付款、不作交易担保；交易问题请直接联系对应渠道，并保留订单截图。</p>
+  </footer>
+</div>
+<div id="toast" role="status"></div>
+
+<script>
+var PRODUCTS = [
+ {id:"gpt-plus", cat:"ChatGPT", name:"ChatGPT Plus 月卡", sell:168, sellNote:"已定价 · 跟市场价",
+  offers:[
+   {ch:"竑予", price:120.50, pay:["ali","wx"], note:"此前核价的低价渠道，下单前再确认在售与质保", url:null},
+   {ch:"16688 · 官网正价直充", price:132.23, pay:["ali","wx"], note:"自助秒充个人号，可开发票；成品号 / 低价 CDK 记录号不充", url:"https://16688.com.cn"},
+   {ch:"16688 · 菲区卡充", price:134.81, pay:["ali","wx"], note:"卡密可囤 1 周；仅限 Free 号、需退出 Team，限制见风险卡", url:"https://16688.com.cn"},
+   {ch:"UpPlusPro", price:143, pay:["ali","wx"], note:"直充站", url:"https://uppluspro.com/recharge"},
+   {ch:"小小AI", price:149, pay:["wx","ali"], note:"加企业微信客服下单", url:"https://xiaoxiao.pro"},
+   {ch:"OKAI66", price:167, fee:"在线付约 +2% 手续费，实付约 ¥170；找客服下单免手续费", pay:["ali","wx"], note:"直充，不要密码，失败原路退款", url:"https://okai66.com"},
+   {ch:"EzSub", price:null, usd:"$24.87", pay:["ali","wx"], note:"站内以美元标价，支持微信 / 支付宝付款，自助开通", url:"https://www.ezsub.com/subscription/chatgpt-recharge"}
+  ]},
+ {id:"gpt-pro100", cat:"ChatGPT", name:"ChatGPT Pro 100 月卡", sell:850, sellNote:"已定价 · 跟市场价",
+  marginNote:"毛利口径：按菲区稳渠道 ¥755.20 进货，毛利约 ¥94.80，在 ¥20–100 区间内；UpPlusPro ¥710 是本轮新核到的低价，按它进货毛利约 ¥140，下单前先核实时价与质保再决定走哪家",
+  offers:[
+   {ch:"UpPlusPro", price:710, pay:["ali","wx"], note:"本轮核到的低价，下单前核实时价", url:"https://uppluspro.com/recharge"},
+   {ch:"16688 · 菲区直充", price:755.20, pay:["ali","wx"], note:"只填买家邮箱，店家充到号上", url:"https://16688.com.cn"},
+   {ch:"小小AI（Pro 5x 档）", price:799, pay:["wx","ali"], note:"加企业微信客服下单", url:"https://xiaoxiao.pro"},
+   {ch:"OKAI66", price:830, pay:["ali","wx"], note:"在线付另有约 2% 手续费", url:"https://okai66.com"},
+   {ch:"EzSub", price:null, usd:"$118.26", pay:["ali","wx"], note:"站内以美元标价，支持微信 / 支付宝付款", url:"https://www.ezsub.com/subscription/chatgpt-recharge"}
+  ]},
+ {id:"gpt-pro200", cat:"ChatGPT", name:"ChatGPT Pro 200 月卡", sell:1300, sellNote:"已定价 · 跟市场价",
+  offers:[
+   {ch:"16688 · 菲区直充", price:1212, pay:["ali","wx"], note:"菲区官方价约 ¥931，美区约 ¥1,336，差价来源见「菲区怎么用」", url:"https://16688.com.cn"},
+   {ch:"UpPlusPro", price:1230, pay:["ali","wx"], note:"直充站", url:"https://uppluspro.com/recharge"},
+   {ch:"OKAI66", price:1500, pay:["ali","wx"], note:"在线付另有约 2% 手续费", url:"https://okai66.com"},
+   {ch:"小小AI（Pro 20x 档）", price:1880, pay:["wx","ali"], note:"加企业微信客服下单", url:"https://xiaoxiao.pro"},
+   {ch:"EzSub", price:null, usd:"$233.84", pay:["ali","wx"], note:"站内以美元标价，支持微信 / 支付宝付款", url:"https://www.ezsub.com/subscription/chatgpt-recharge"}
+  ]},
+ {id:"claude-pro", cat:"Claude", name:"Claude Pro 月卡", sell:249, sellNote:"已定价 · Claude 多赚一点",
+  offers:[
+   {ch:"瑶瑶商城", price:159, pay:["ali","wx"], note:"填组织 ID 开通，不要密码；链接为说明页，内有商城入口", url:"https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html"},
+   {ch:"GPTPlus.CV", price:219, pay:["ali","wx"], note:"买卡自助兑换，充值失败退款", url:"https://gptplus.cv/claude"},
+   {ch:"ClaudeMax", price:null, usd:"代充时有售罄", pay:["ali"], note:"下单前看站内在售状态", url:"https://claudemax.shop"}
+  ]},
+ {id:"claude-max5", cat:"Claude", name:"Claude Max 5x 月卡", sell:999, sellNote:"已定价 · Claude 多赚一点",
+  offers:[
+   {ch:"瑶瑶商城", price:900, pay:["ali","wx"], note:"链接为说明页，内有商城入口", url:"https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html"},
+   {ch:"ClaudeMax", price:999, pay:["ali"], note:"代充到自己账号，通常 5–30 分钟", url:"https://claudemax.shop"}
+  ]},
+ {id:"claude-max20", cat:"Claude", name:"Claude Max 20x 月卡", sell:null, sellSuggest:1899, sellNote:"未定价 · 建议进货价 +约¥99",
+  offers:[
+   {ch:"瑶瑶商城", price:1800, pay:["ali","wx"], note:"链接为说明页，内有商城入口", url:"https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html"},
+   {ch:"ClaudeMax", price:1999, pay:["ali"], note:"账号需注册满 3–15 天等条件，下单前看商品说明", url:"https://claudemax.shop"}
+  ]},
+ {id:"gemini-pro", cat:"Gemini", name:"Gemini（Google AI Pro）6 个月", sell:null, sellSuggest:149, sellNote:"未定价 · 建议价",
+  refNote:"官方直订 $19.99/月（约 6 个月 $120），需支持地区账号 + 境外卡、不能用微信 / 支付宝，不参与比价，仅作价格对照。本表两条均为 6 个月口径，可直接比。",
+  offers:[
+   {ch:"盾灵", price:88, pay:["wx","ali"], note:"含服务费 ¥15，质保 2 个月；价为 2026-11-17 更新", url:"https://www.dunling.com/gemini"},
+   {ch:"瑶瑶商城", price:99, pay:["ali","wx"], note:"开在自己 Google 账号，不要密码；链接为说明页", url:"https://kw.yaoyao.chat/guide/gemini-pro-daichong.html"}
+  ]},
+ {id:"duo-seat", cat:"多邻国", name:"多邻国 Super 家庭组 · 1 个座位 / 年", sell:null, sellSuggest:198, sellNote:"未定价 · 建议价",
+  refNote:"官方个人 Super $95.99/年，需境外卡、不参与比价，仅作家庭组座位的价值对照。",
+  offers:[
+   {ch:"自开家庭组（自己当组长）", price:134, pay:["ali","wx"], note:"官方家庭组 $119.99/年 ÷ 6 人 ≈ ¥134/座（汇率 6.67 估算）；在 App 内开通后拉买家进组", url:null}
+  ]},
+ {id:"x-premium", cat:"X", name:"X Premium 月卡（新版 X Subscription）", sell:null, sellSuggest:119, sellNote:"未定价 · 建议价 · 只卖月卡",
+  offers:[
+   {ch:"Littlemagic8", price:89, pay:["ali","wx"], note:"核实过的购买页，页面标价 ¥89；买卡密后提交 sso 自助充值，不交密码", url:"https://littlemagic8.github.io/gptplus/purchase-grok.html"}
+  ]}
+];
+
+var RISKS = [
+ {t:"已有订阅，充不进去", why:"菲区卡充走官方兑换，不是扣费续费。系统检测到账号还有 Plus / Pro 在有效期内（宽限期也算），会直接拒掉，不会叠加天数。",
+  check:"chatgpt.com → 左下角头像 → 设置 → 订阅：显示 Free 才能充；显示 Plus / Pro + 到期日就是还有订阅。",
+  script:"亲，菲区卡密只能充 Free 号，你现在还有订阅在，系统会直接拒掉，不是我不给你充。你先在设置里把自动续费关了，等到期变回 Free 当天找我，我马上帮你充，不会少你天数。",
+  war:"没充成不算交付，全额退或等刷回 Free 再充"},
+ {t:"账号在 Team 空间里", why:"Team 是团队版，账单走团队管理员，个人卡密和个人直充都充不进团队号，充了也到不了个人订阅上。",
+  check:"设置 → 工作区 / 团队：只有 Personal / 个人才能充；显示某个 Team 名字就是在团队里。",
+  script:"亲，你这个号现在在 Team 团队里，个人卡充不进去。你要么退出 Team 用个人号找我充，要么换个自己的个人号，我这边才能操作，Team 号充了也是白充。",
+  war:"退出 Team 或换号后可正常充；硬充失败全额退"},
+ {t:"成品号 / 0 元购 / 黑充 / 低价 CDK 记录号（风险号）", why:"这类号在官方那边已被打上风险标记，再用低价渠道充很容易触发风控。所以以前很多店家直接不接；按我们的新口径：可以接，但质保要先说清。",
+  check:"卖家查不到后台，只能问买家三句：号是自己邮箱注册的还是买来的？以前用过特别便宜的卡、0 元单、黑充吗？设置 → 账单记录里有没有 $0 订单或欠费账单？",
+  script:"亲，你这个号之前用过低价卡 / 是买来的成品号是吧？能充，但得先跟你说清：这种号风控严，万一封号店家是不保的，只有订阅本身掉了才按没用完的天数比例退。你接受这个我就帮你充，不接受就换个自己注册的干净号再来。",
+  war:"风险号可接，质保同店家：只保订阅，掉订阅按天退，封号 / 风控不保（必须提前写进闲鱼详情）"},
+ {t:"用美元付过费，币种被锁死", why:"账号一旦用美元成功付过费，订阅币种就锁定为美元，菲区 ₱ 价格页面出不来，自己动手充菲区这条路就走不通。",
+  check:"设置 → 账单记录：看历史订单的币种是不是 USD；是美元的话别承诺菲区价，改走官网直充或 iOS 美区。",
+  script:"亲，你这个号以前用美元付过费，币种被官方锁死了，菲区那个价格出不来，不是我加价。我给你走官网正价直充，贵十几块但能充上，你看行不行？",
+  war:"改走不限币种的渠道，差价先说清再下单"},
+ {t:"还没到期就想提前充", why:"菲区卡充不能覆盖、不能提前； iOS 美区可以覆盖续期，但天数不叠加 —— 剩 5 天时充进去还是 30 天，等于白丢 5 天。",
+  check:"设置 → 订阅看到期日，离到期 1–2 天再充最划算。",
+  script:"亲，不建议现在充。提前充天数不叠加，你剩下的 5 天就白扔了。等到期那天你喊我，我当天给你续上，一天都不浪费。",
+  war:"因提前充损失的天数不补，先提醒再操作"},
+ {t:"充完之后掉订阅", why:"渠道侧的问题（卡被回收、付款被撤销等）会让订阅中途掉下来，这是代充最常见的售后，和账号本身无关。",
+  check:"买家到设置 → 订阅确认是否变回 Free，并截图带上时间；你再拿订单号找进货店家核。",
+  script:"亲，先别急，你到设置 → 订阅看一下现在显示什么，截图发我。确认是订阅掉了，我按你没用完的天数比例给你退，比如还剩 20 天就退 20 天的钱，不让你吃亏。",
+  war:"只保订阅本身：掉订阅按未用天数比例退款"},
+ {t:"账号被封 / 触发风控", why:"封号是官方对账号行为、地区、历史记录的判定，和充值动作本身是两回事；所有渠道的质保条款都写明封号不保。",
+  check:"登录时页面会直接提示账号被停用；这种情况先让买家走官方申诉，你这边提供订单凭证配合。",
+  script:"亲，封号是官方对账号的判定，这个店家写明了不保，我也没法给你退订阅费，这一条下单前详情里也写了。我能做的是把订单凭证发你，你申诉时可以证明是正常付费订阅。",
+  war:"封号 / 风控不保（下单前必须在详情里写明）"},
+ {t:"Claude：组织 ID 填错 / 新号充不了 Max", why:"Claude 代充是按组织 ID 开到对应账号的，ID 填错就开到别的组织；Max 代充对账号有条件 —— 新注册的号要等 3–15 天，应用内订阅没到期也充不了。",
+  check:"开通后在 claude.ai 设置里看套餐显示 Pro / Max、用量页有 5 小时与每周进度条，就是正常到账；下单前先让买家确认账号注册时间和现有订阅。",
+  script:"亲，Claude 这单我要先拿你的组织 ID 才能开，ID 在设置里复制，别发密码给我。你号刚注册的话 Max 要等几天才能充，我先帮你记着，到日子提醒你。",
+  war:"开错档位 / 没到账找店家处理；账号条件不符先等或改档"},
+ {t:"Gemini：地区不支持 / 账号地区不对", why:"Google AI Pro 只在官方支持的 150 多个国家和地区提供，中国大陆不在其中；账号地区不对时官网会直接提示不支持，代充也要先确认账号状态。",
+  check:"开通后到 one.google.com 看自己名下是否显示 Google AI Pro 和到期日，那是最准的到账凭证。",
+  script:"亲，Gemini 开通后你去 one.google.com 看一眼，显示 Google AI Pro 和到期日就是到账了。地区提示那种是 Google 的限制，代充就是帮你把付款这步绕过去，会员还是开在你自己号上。",
+  war:"按店家条款：盾灵质保 2 个月，掉订阅先联系店家核单"},
+ {t:"X 只卖月卡 / 多邻国家庭组被清退", why:"X 的长周期卡售后不可控，所以只卖月卡；多邻国家庭组的风险在组长 —— 组长取消订阅或把成员移出，座位立刻掉，自己当组长就没这问题。",
+  check:"X 到账看 grok.com 账户面板里的 Subscription 显示 Premium；多邻国在 App 的 Super 页面看家庭组成员状态。",
+  script:"亲，X 我只卖月卡不是坑你，年卡周期太长、中途出问题谁都说不清，月卡反而稳妥。多邻国是我自己开的家庭组，我是组长，不会随便踢人，到期前也会提前喊你续。",
+  war:"X 月卡按当月处理；多邻国自开组，组长原因掉座按剩余天数退"}
+];
+
+function payHTML(pays){
+  var map={wx:'<i class="wx">微信</i>', ali:'<i class="ali">支付宝</i>', usd:'<i class="usd">美元</i>'};
+  return '<span class="pay">'+pays.map(function(p){return map[p]||""}).join("")+'</span>';
+}
+function money(n){ return "¥"+Number(n).toLocaleString("zh-CN",{minimumFractionDigits:(n%1?2:0),maximumFractionDigits:2}); }
+function lowestOffer(p){
+  var best=null;
+  p.offers.forEach(function(o){ if(o.price!=null && (best===null||o.price<best.price)) best=o; });
+  return best;
+}
+function sellOf(p){ return p.sell!=null?p.sell:p.sellSuggest; }
+
+function renderCompare(){
+  var root=document.getElementById("compareRoot");
+  var html="";
+  PRODUCTS.forEach(function(p){
+    var best=lowestOffer(p), sell=sellOf(p);
+    var rows=p.offers.slice().sort(function(a,b){
+      var av=a.price==null?Infinity:a.price, bv=b.price==null?Infinity:b.price;
+      return av-bv;
+    }).map(function(o){
+      var isBest = best && o===best;
+      var price = o.price!=null ? money(o.price) : (o.usd||"—");
+      var name = o.url ? '<a href="'+o.url+'" target="_blank" rel="noopener"><b>'+o.ch+'</b></a>' : '<b>'+o.ch+'</b>';
+      var note = o.note||"";
+      if(o.fee) note += (note?"；":"")+o.fee;
+      return '<tr class="'+(isBest?"best":"")+'"><td data-l="渠道">'+name+(isBest?'<span class="tag best">最低价</span>':"")+'</td>'+
+        '<td data-l="价格" class="price num">'+price+'</td>'+
+        '<td data-l="支付">'+payHTML(o.pay)+'</td>'+
+        '<td data-l="备注"><span class="note" style="display:inline;font-size:13px">'+note+'</span></td></tr>';
+    }).join("");
+    var profit = (best&&sell!=null)? sell-best.price : null;
+    html += '<h3 style="margin:20px 0 2px">'+p.cat+' · '+p.name+'</h3>'+
+      '<div class="tbl-wrap"><table><thead><tr><th>渠道（点名字去下单）</th><th>进货价</th><th>支付</th><th>备注 / 手续费 / 限制</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+      '<div class="sellbox"><span>闲鱼卖价：<b class="num sell-val" data-pid="'+p.id+'">'+(sell!=null?money(sell):"—")+'</b> <span class="tiny">（'+p.sellNote+'）</span></span>'+
+      (profit!=null?'<span>按最低进货价，单笔毛利约 <b class="num">'+money(profit)+'</b></span>':"")+'</div>'+
+      (p.marginNote?'<p class="tiny" style="margin:2px 2px 0">'+p.marginNote+'</p>':"")+
+      (p.refNote?'<p class="tiny" style="margin:2px 2px 0">'+p.refNote+'</p>':"");
+  });
+  root.innerHTML=html;
+}
+function renderLowest(){
+  var el=document.getElementById("lowestStrip");
+  el.innerHTML = PRODUCTS.filter(function(p){return ["gpt-plus","claude-pro","gemini-pro","duo-seat","x-premium"].indexOf(p.id)>=0;}).map(function(p){
+    var b=lowestOffer(p);
+    return '<div class="low-card"><div class="cat">'+p.cat+'</div><div class="plan">'+p.name+'</div>'+
+      '<div class="price num">'+(b?money(b.price):"—")+'</div><div class="from">最低进货 · '+(b?b.ch:"")+'</div></div>';
+  }).join("");
+}
+function renderRisks(){
+  document.getElementById("riskGrid").innerHTML = RISKS.map(function(r,i){
+    return '<div class="card"><h3>'+(i+1)+'. '+r.t+'</h3>'+
+      '<p class="why"><b>出什么问题：</b>'+r.why+'</p>'+
+      '<p class="check"><b>买家怎么查：</b>'+r.check+'</p>'+
+      '<div class="script">'+r.script+'</div>'+
+      '<div class="foot"><span class="warranty">质保口径：'+r.war+'</span>'+
+      '<button class="copy-btn" type="button" data-script="'+i+'">复制话术</button></div></div>';
+  }).join("");
+}
+var toastTimer=null;
+function toast(msg){
+  var t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove("show")},2600);
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-script]");
+  if(!b) return;
+  var text=RISKS[Number(b.getAttribute("data-script"))].script;
+  function done(){ toast("话术已复制，去闲鱼粘贴就能发"); }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done,function(){ fallback(); });
+  } else fallback();
+  function fallback(){
+    var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta);
+    ta.select(); try{ document.execCommand("copy"); done(); }catch(err){ toast("复制失败，请长按话术手动复制"); }
+    document.body.removeChild(ta);
+  }
+});
+
+/* calculator */
+var calcSel=document.getElementById("calcProduct"), calcCost=document.getElementById("calcCost"), calcSell=document.getElementById("calcSell");
+PRODUCTS.forEach(function(p){
+  var opt=document.createElement("option"); opt.value=p.id; opt.textContent=p.cat+" · "+p.name; calcSel.appendChild(opt);
+});
+function calcUpdate(){
+  var p=PRODUCTS.filter(function(x){return x.id===calcSel.value})[0];
+  var cost=parseFloat(calcCost.value), sell=parseFloat(calcSell.value);
+  var hint=document.getElementById("calcHint");
+  if(isNaN(cost)||isNaN(sell)){ hint.textContent="填上进货价和卖价就能算。"; return; }
+  var one=sell-cost;
+  document.getElementById("outOne").textContent=money(one);
+  document.getElementById("outMargin").textContent=(sell>0? (one/sell*100).toFixed(1)+"%":"—");
+  document.getElementById("out10").textContent=money(one*10);
+  document.getElementById("out100").textContent=money(one*100);
+  hint.textContent = one<0 ? "注意：这个卖价低于进货价，是亏的。" :
+    (one<20 ? "提醒：单笔利润低于 ¥20，不在定的 ¥20–100 区间里。" :
+    (one>100 ? "提醒：单笔利润超过 ¥100，偏离定的区间；Claude 可以多赚一点，其它品类注意别把价格打飞了。" : "在定的 ¥20–100/单 区间内。"));
+}
+function calcLoad(){
+  var p=PRODUCTS.filter(function(x){return x.id===calcSel.value})[0];
+  var b=lowestOffer(p);
+  calcCost.value=b?b.price:"";
+  calcSell.value=sellOf(p)!=null?sellOf(p):"";
+  calcUpdate();
+}
+calcSel.addEventListener("change",calcLoad);
+calcCost.addEventListener("input",calcUpdate);
+calcSell.addEventListener("input",calcUpdate);
+document.getElementById("applySell").addEventListener("click",function(){
+  var p=PRODUCTS.filter(function(x){return x.id===calcSel.value})[0];
+  var v=parseFloat(calcSell.value);
+  if(isNaN(v)){ toast("先填一个卖价"); return; }
+  if(p.sell!=null) p.sell=v; else p.sellSuggest=v;
+  renderCompare();
+  toast("已把 "+p.name+" 的卖价更新为 "+money(v)+"（仅本次打开有效）");
+});
+document.getElementById("refreshBtn").addEventListener("click",function(){
+  renderCompare(); renderLowest(); calcLoad();
+  toast("已按 2026-11-20 核实快照重新整理；实时价请以下单页为准");
+});
+renderCompare(); renderLowest(); renderRisks(); calcLoad();
+</script>
+</body>
+</html>
