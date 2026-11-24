@@ -8,208 +8,295 @@
 <title>代充最低价对比 · 分享版</title>
 <style>
   :root{
-    --bg:#f7f8f7; --surface:#ffffff; --surface2:#eef3f1; --ink:#17211d; --ink2:#4c5a54; --ink3:#75837d;
-    --line:#dde5e1; --accent:#0e7a5f; --accent-ink:#ffffff; --accent-soft:#e2f2ec;
-    --gold:#b97f16; --gold-soft:#fdf3dd; --danger:#b3372c; --danger-soft:#fbeae8;
+    --bg:#f4f3ef; --bg2:#eceae3;
+    --surface:#ffffff; --surface2:#f7f6f2; --surface3:#111a16;
+    --ink:#121714; --ink2:#4a554f; --ink3:#7a8680;
+    --line:#e2ded2; --line2:#d6d1c2;
+    --accent:#0a6e4f; --accent2:#0f8a62; --accent-ink:#ffffff; --accent-soft:#e6f2ec; --accent-line:#bfe3d3;
+    --gold:#9a6b0f; --gold-bg:#fff7d6; --gold-line:#e8cf7a;
+    --danger:#b3372c; --danger-soft:#fdf0ee;
     --wx:#07c160; --ali:#1677ff;
-    --radius:14px; --radius-s:9px;
-    --shadow:0 1px 2px rgba(20,40,33,.06),0 4px 14px rgba(20,40,33,.05);
+    --r-xl:22px; --r-lg:18px; --r-md:14px; --r-sm:10px;
+    --shadow:0 1px 0 rgba(18,23,20,.04),0 8px 28px rgba(18,23,20,.07),0 2px 6px rgba(18,23,20,.04);
+    --shadow-lg:0 20px 50px rgba(10,40,30,.13),0 4px 14px rgba(10,40,30,.08);
   }
   @media (prefers-color-scheme: dark){
     :root{
-      --bg:#101613; --surface:#182019; --surface2:#1f2a22;
-      --ink:#e9efec; --ink2:#a9bab2; --ink3:#7e8f87;
-      --line:#2b3a31; --accent:#2fae87; --accent-ink:#0b1512; --accent-soft:#173b30;
-      --gold:#e0aa3e; --gold-soft:#3a2f14; --danger:#e07a6e; --danger-soft:#40211d;
-      --shadow:0 1px 2px rgba(0,0,0,.35),0 4px 14px rgba(0,0,0,.3);
+      --bg:#0e1210; --bg2:#0a0e0b;
+      --surface:#171d19; --surface2:#1e2621; --surface3:#e9efec;
+      --ink:#eef2ef; --ink2:#aebbb3; --ink3:#7f8f86;
+      --line:#28332c; --line2:#34443a;
+      --accent:#34c48d; --accent2:#4ad39e; --accent-ink:#07120d; --accent-soft:#17382c; --accent-line:#245c46;
+      --gold:#e8b93e; --gold-bg:#2f270f; --gold-line:#5a4a1a;
+      --danger:#ef8a7e; --danger-soft:#3a211e;
+      --shadow:0 1px 0 rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+      --shadow-lg:0 20px 50px rgba(0,0,0,.5);
     }
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+  html{scroll-behavior:smooth;scroll-padding-top:84px}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none!important} }
   body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC",sans-serif;
-    font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
-  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
-  .wrap{max-width:1060px;margin:0 auto;padding:0 16px 64px}
-  .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Source Han Sans SC","Noto Sans SC",sans-serif;
+    font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  a{color:var(--accent);text-decoration:none;font-weight:600}
+  a:hover{text-decoration:underline;text-underline-offset:3px}
+  button,select,input{font:inherit}
+  .num{font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;letter-spacing:-.02em}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px 72px}
+  @media(max-width:560px){.wrap{padding:0 14px 56px}}
 
-  /* ---------- top strip ---------- */
-  .topbar{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-  .topbar-in{max-width:1060px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .topbar .t{font-weight:800;font-size:16px;letter-spacing:.2px}
-  .topbar .date{color:var(--ink2);font-size:13px}
+  /* topbar */
+  .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(14px) saturate(1.4);border-bottom:1px solid var(--line)}
+  .topbar-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:12px}
+  @media(max-width:560px){.topbar-in{padding:10px 14px}}
+  .mark{width:36px;height:36px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900;font-size:19px;flex:none;letter-spacing:-.05em}
+  @media (prefers-color-scheme: dark){.mark{background:var(--accent);color:#07120d}}
+  .topbar .t{font-weight:800;font-size:15.5px;letter-spacing:.01em;line-height:1.1}
+  .topbar .t small{display:block;font-size:11.5px;font-weight:600;color:var(--ink3);letter-spacing:.06em;margin-top:1px}
   .topbar .sp{flex:1}
-  .btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);
-    font:inherit;font-weight:700;font-size:14px;padding:7px 16px;border-radius:999px;cursor:pointer;min-height:36px}
-  .btn.ghost{background:transparent;color:var(--accent)}
+  .date-pill{font-size:12.5px;font-weight:700;color:var(--ink2);background:var(--surface);border:1px solid var(--line);padding:6px 11px;border-radius:999px;white-space:nowrap}
+  @media(max-width:640px){.date-pill{display:none}}
+  .btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:999px;cursor:pointer;min-height:38px;transition:.15s}
+  .btn:hover{filter:brightness(1.06)}
   .btn:active{transform:translateY(1px)}
-  nav.quick{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
-  nav.quick a{border:1px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:999px;
-    padding:6px 13px;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;min-height:32px}
-  nav.quick a:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}
+  .btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line2)}
+  .btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
 
-  h1{font-size:27px;line-height:1.3;margin:22px 0 6px;font-weight:850;letter-spacing:.2px}
-  .lede{color:var(--ink2);margin:0 0 4px;max-width:46em}
-  h2{font-size:20px;font-weight:800;margin:38px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  h2 .sub{font-size:13px;color:var(--ink3);font-weight:500}
-  h3{font-size:16px;font-weight:750;margin:0 0 6px}
+  /* hero */
+  .hero{margin:22px 0 0;background:var(--surface3);color:#f2f0e9;border-radius:24px;padding:30px 30px 26px;position:relative;overflow:hidden;box-shadow:var(--shadow-lg)}
+  @media (prefers-color-scheme: dark){.hero{background:#e9efec;color:#121714}}
+  @media(max-width:640px){.hero{padding:22px 18px 18px;border-radius:18px}}
+  .hero::after{content:"";position:absolute;right:-70px;top:-70px;width:280px;height:280px;border-radius:50%;border:52px solid color-mix(in srgb,var(--accent) 22%,transparent);pointer-events:none}
+  .hero-top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;position:relative;z-index:1}
+  .hero-badge{font-size:11.5px;font-weight:800;letter-spacing:.12em;padding:5px 10px;border-radius:999px;background:var(--accent);color:#fff}
+  @media (prefers-color-scheme: dark){.hero-badge{color:#07120d}}
+  .hero-badge2{font-size:12px;font-weight:600;opacity:.75;border:1px solid color-mix(in srgb,currentColor 25%,transparent);padding:5px 10px;border-radius:999px}
+  .hero h1{font-size:clamp(30px,5vw,46px);line-height:1.05;letter-spacing:-.03em;font-weight:900;margin:16px 0 10px;position:relative;z-index:1;max-width:12em}
+  .hero h1 em{font-style:normal;color:var(--accent2)}
+  @media (prefers-color-scheme: dark){.hero h1 em{color:var(--accent)}}
+  .hero .lede{font-size:15.5px;line-height:1.7;opacity:.82;max-width:44em;margin:0;position:relative;z-index:1}
+  .hero .lede strong{opacity:1;color:inherit}
+  .hero-meta{display:flex;gap:0;flex-wrap:wrap;margin-top:22px;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent);padding-top:16px;position:relative;z-index:1}
+  .hero-meta div{padding-right:22px;margin-right:22px;border-right:1px solid color-mix(in srgb,currentColor 12%,transparent)}
+  .hero-meta div:last-child{border:none;margin:0;padding:0}
+  .hero-meta b{display:block;font-size:19px;line-height:1;letter-spacing:-.02em}
+  .hero-meta span{font-size:12px;opacity:.65;font-weight:600}
+  @media(max-width:560px){.hero-meta div{padding-right:14px;margin-right:14px}.hero-meta b{font-size:16px}}
+
+  nav.quick{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 2px}
+  nav.quick a{border:1px solid var(--line);background:var(--surface);color:var(--ink2);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;min-height:34px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  nav.quick a:hover{color:var(--accent);border-color:var(--accent-line);text-decoration:none;background:var(--accent-soft)}
+
+  /* section heads */
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:42px 0 14px;flex-wrap:wrap}
+  .sec-head h2{font-size:22px;font-weight:900;letter-spacing:-.02em;margin:0;line-height:1.15;display:flex;align-items:center;gap:10px}
+  .sec-head h2::before{content:"";width:8px;height:26px;border-radius:99px;background:var(--accent);flex:none}
+  .sec-head .sub{font-size:13px;color:var(--ink3);font-weight:500}
+  h2.plain{font-size:22px;font-weight:900;letter-spacing:-.02em;margin:42px 0 4px}
+  h3{font-size:15.5px;font-weight:800;margin:0 0 6px;letter-spacing:-.01em}
   p{margin:6px 0}
-  .small{font-size:13px;color:var(--ink2)}
-  .tiny{font-size:12.5px;color:var(--ink3)}
+  .small{font-size:13.5px;color:var(--ink2);line-height:1.65}
+  .tiny{font-size:12.5px;color:var(--ink3);line-height:1.6}
 
-  /* ---------- lowest strip ---------- */
-  .lowest{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:18px 0 6px}
-  .low-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:13px 14px;box-shadow:var(--shadow)}
-  .low-card .cat{font-size:13px;color:var(--ink2);font-weight:700}
-  .low-card .plan{font-size:12.5px;color:var(--ink3)}
-  .low-card .price{font-size:24px;font-weight:850;color:var(--accent);margin:2px 0 0}
-  .low-card .price small{font-size:13px;font-weight:600;color:var(--ink2)}
-  .low-card .from{font-size:12.5px;color:var(--ink2)}
-  @media (max-width:820px){ .lowest{grid-template-columns:repeat(2,1fr)} .low-card:last-child{grid-column:span 2} }
-  @media (max-width:420px){ .lowest{grid-template-columns:1fr 1fr} }
+  /* lowest */
+  .lowest{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0 4px}
+  @media(max-width:900px){.lowest{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.lowest{grid-template-columns:repeat(2,1fr)}}
+  .low-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .low-card::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--accent)}
+  .low-card .cat{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--accent);text-transform:uppercase}
+  .low-card .plan{font-size:12.5px;color:var(--ink2);font-weight:600;line-height:1.4;min-height:2.6em;margin-top:2px}
+  .low-card .price{font-size:28px;font-weight:900;color:var(--ink);margin:6px 0 0;letter-spacing:-.04em;line-height:1}
+  .low-card .price i{font-style:normal;font-size:14px;font-weight:700;color:var(--ink3)}
+  .low-card .from{font-size:12px;color:var(--ink3);margin-top:6px;line-height:1.4;border-top:1px dashed var(--line);padding-top:7px}
 
-  .notice{background:var(--gold-soft);border:1px solid color-mix(in srgb,var(--gold) 35%,transparent);border-radius:var(--radius);
-    padding:12px 15px;margin:14px 0;font-size:14px}
-  .notice b{color:var(--gold)}
+  /* pricing rule */
+  .rule{margin:16px 0 0;background:var(--gold-bg);border:1px solid var(--gold-line);border-radius:var(--r-lg);padding:16px 18px;display:grid;grid-template-columns:1.1fr 1.4fr 1fr;gap:18px}
+  @media(max-width:760px){.rule{grid-template-columns:1fr}}
+  .rule h4{margin:0 0 4px;font-size:12px;letter-spacing:.08em;color:var(--gold);font-weight:900}
+  .rule p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink)}
+  .rule b{white-space:nowrap}
 
-  /* ---------- tables ---------- */
-  .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin:10px 0 6px}
+  /* filter */
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 6px}
+  .filters button{appearance:none;border:1px solid var(--line2);background:var(--surface);color:var(--ink2);font-weight:700;font-size:13px;padding:7px 14px;border-radius:999px;cursor:pointer;min-height:36px}
+  .filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  @media (prefers-color-scheme: dark){.filters button.on{background:var(--accent);color:#07120d;border-color:var(--accent)}}
+
+  /* product blocks */
+  .prod{margin:18px 0 22px}
+  .prod-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 2px 10px}
+  .prod-head .cat-chip{font-size:11px;font-weight:900;letter-spacing:.08em;background:var(--ink);color:var(--bg);padding:4px 9px;border-radius:999px}
+  @media (prefers-color-scheme: dark){.prod-head .cat-chip{background:var(--accent);color:#07120d}}
+  .prod-head h3{font-size:17px;margin:0}
+  .prod-head .sell-pill{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink2)}
+  .prod-head .sell-pill b{color:var(--ink);font-size:15px}
+  .prod-head .sell-pill .profit{color:var(--accent);font-weight:800}
+
+  .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
   table{border-collapse:collapse;width:100%;font-size:14.5px}
-  th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-  th{background:var(--surface2);font-size:12.5px;color:var(--ink2);font-weight:700;letter-spacing:.4px}
+  th,td{padding:11px 14px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--line)}
+  th{background:var(--surface2);font-size:11.5px;color:var(--ink3);font-weight:800;letter-spacing:.07em;text-transform:uppercase}
   tr:last-child td{border-bottom:none}
-  td.price{font-weight:800;font-size:16px}
+  tbody tr{transition:background .12s}
+  tbody tr:hover td{background:color-mix(in srgb,var(--surface2) 70%,transparent)}
+  td.price{font-weight:900;font-size:17px;letter-spacing:-.02em}
   tr.best td{background:var(--accent-soft)}
+  tr.best:hover td{background:var(--accent-soft)}
   tr.best td.price{color:var(--accent)}
-  .tag{display:inline-block;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 7px;vertical-align:2px;margin-left:6px}
+  .tag{display:inline-block;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;vertical-align:2px;margin-left:7px;letter-spacing:.02em}
   .tag.best{background:var(--accent);color:var(--accent-ink)}
-  .tag.warn{background:var(--gold-soft);color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 40%,transparent)}
-  .tag.risk{background:var(--danger-soft);color:var(--danger)}
   .pay{display:inline-flex;gap:4px;flex-wrap:wrap}
-  .pay i{font-style:normal;font-size:11.5px;font-weight:700;border-radius:5px;padding:1px 7px;color:#fff}
+  .pay i{font-style:normal;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;color:#fff;line-height:1.5}
   .pay .wx{background:var(--wx)} .pay .ali{background:var(--ali)} .pay .usd{background:#8a94a6}
-  td .note{display:block;font-size:12.5px;color:var(--ink2);font-weight:400;margin-top:1px}
-  .sellbox{display:flex;gap:14px;flex-wrap:wrap;margin:8px 2px 0;font-size:14px}
-  .sellbox b{color:var(--accent)}
+  td .note{font-size:12.5px;color:var(--ink2);line-height:1.55}
   @media (max-width:720px){
     table,thead,tbody,tr,td{display:block}
     thead{display:none}
-    tr{border-bottom:1px solid var(--line);padding:6px 0}
+    tr{border-bottom:1px solid var(--line);padding:10px 2px}
     tr:last-child{border-bottom:none}
     td{border-bottom:none;padding:3px 14px}
-    td::before{content:attr(data-l);display:inline-block;min-width:4.6em;font-size:12px;color:var(--ink3);font-weight:600;margin-right:8px}
-    td.price{font-size:18px}
+    td::before{content:attr(data-l);display:inline-block;min-width:3.8em;font-size:11px;color:var(--ink3);font-weight:800;letter-spacing:.05em;margin-right:8px;vertical-align:2px}
+    td.price{font-size:19px}
+    tr.best{border-radius:0}
   }
 
-  /* ---------- cards & steps ---------- */
+  /* cards */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
   @media (max-width:760px){ .grid{grid-template-columns:1fr} }
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;box-shadow:var(--shadow)}
-  .card h3{margin-bottom:2px}
-  .card .why,.card .check{font-size:14px;color:var(--ink2);margin:5px 0}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow)}
+  .card h3{font-size:15.5px}
+  .card .why,.card .check{font-size:13.5px;color:var(--ink2);margin:6px 0;line-height:1.65}
   .card .why b,.card .check b{color:var(--ink)}
-  .script{background:var(--surface2);border-radius:var(--radius-s);padding:11px 13px;font-size:14px;margin:9px 0 7px;white-space:pre-wrap}
+  .script{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:13.5px;line-height:1.65;margin:10px 0 10px;white-space:pre-wrap}
   .card .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-  .warranty{font-size:12.5px;color:var(--gold);font-weight:700}
-  .copy-btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--accent);
-    font:inherit;font-size:13px;font-weight:700;border-radius:8px;padding:5px 13px;cursor:pointer;min-height:36px}
-  .copy-btn:hover{border-color:var(--accent)}
-
-  .steps{display:grid;gap:12px;margin:12px 0}
-  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 17px;box-shadow:var(--shadow);display:flex;gap:15px}
-  .step .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
-    font-weight:850;display:flex;align-items:center;justify-content:center;font-size:16px;margin-top:2px}
-  .step ul{margin:5px 0 2px;padding-left:19px}
-  .step li{margin:3px 0;font-size:14.5px}
-  .step li::marker{color:var(--accent)}
-
-  .checklist{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:8px 17px;box-shadow:var(--shadow);margin:12px 0}
-  .checklist li{list-style:none;position:relative;padding:11px 0 11px 34px;border-bottom:1px solid var(--line);font-size:15px}
-  .checklist li:last-child{border-bottom:none}
-  .checklist{padding-left:17px}
-  .checklist ul{margin:0;padding:0}
-  .checklist li::before{content:"";position:absolute;left:2px;top:13px;width:19px;height:19px;border-radius:6px;
-    border:2px solid var(--accent);background:var(--accent-soft)}
-  .checklist li b{display:block}
-  .checklist li span{color:var(--ink2);font-size:13.5px}
+  .warranty{font-size:12px;color:var(--gold);font-weight:700;line-height:1.5;flex:1;min-width:180px}
+  .copy-btn{appearance:none;border:1px solid var(--line2);background:var(--ink);color:var(--bg);font-size:13px;font-weight:800;border-radius:999px;padding:7px 14px;cursor:pointer;min-height:36px;flex:none}
+  @media (prefers-color-scheme: dark){.copy-btn{background:var(--accent);color:#07120d;border-color:var(--accent)}}
+  .risk-num{width:26px;height:26px;border-radius:8px;background:var(--surface2);border:1px solid var(--line);display:inline-grid;place-items:center;font-size:12px;font-weight:900;color:var(--ink2);vertical-align:2px;margin-right:7px}
 
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
   @media (max-width:760px){ .two{grid-template-columns:1fr} }
-  .two .card ol{margin:6px 0 2px;padding-left:20px}
-  .two .card li{margin:4px 0;font-size:14.5px}
-  .two .card li::marker{color:var(--accent);font-weight:700}
+  .two .card ol,.card ol{margin:8px 0 2px;padding-left:20px}
+  .two .card li,.card li{margin:5px 0;font-size:14px;line-height:1.6}
+  .two .card li::marker,.card li::marker{color:var(--accent);font-weight:800}
 
-  /* ---------- calculator ---------- */
-  .calc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:var(--shadow);margin:12px 0}
-  .calc .row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
-  .calc label{font-size:13px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px}
-  .calc select,.calc input{font:inherit;font-size:15px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;
-    background:var(--surface);color:var(--ink);min-height:40px}
-  .calc select{min-width:210px;max-width:100%}
-  .calc input{width:120px}
-  .calc .out{display:flex;gap:22px;flex-wrap:wrap;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
-  .calc .out div b{display:block;font-size:21px;color:var(--accent)}
-  .calc .out div span{font-size:12.5px;color:var(--ink2)}
+  .checklist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:6px 18px;box-shadow:var(--shadow);margin:12px 0}
+  .checklist ul{margin:0;padding:0}
+  .checklist li{list-style:none;position:relative;padding:14px 0 14px 40px;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.6}
+  .checklist li:last-child{border-bottom:none}
+  .checklist li::before{content:"✓";position:absolute;left:0;top:14px;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:900}
+  @media (prefers-color-scheme: dark){.checklist li::before{color:#07120d}}
+  .checklist li b{display:block;font-size:15px}
+  .checklist li span{color:var(--ink2);font-size:13.5px}
 
-  .log{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px 17px;box-shadow:var(--shadow);margin:12px 0}
-  .log div{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;flex-wrap:wrap}
+  .steps{display:grid;gap:10px;margin:12px 0}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow);display:flex;gap:16px}
+  .step .n{flex:none;width:38px;height:38px;border-radius:12px;background:var(--ink);color:var(--bg);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:16px}
+  @media (prefers-color-scheme: dark){.step .n{background:var(--accent);color:#07120d}}
+  .step ul{margin:6px 0 2px;padding-left:19px}
+  .step li{margin:4px 0;font-size:14px;line-height:1.65}
+  .step li::marker{color:var(--accent)}
+
+  /* calculator — dark panel */
+  .calc{background:#121a16;color:#eef2ef;border-radius:22px;padding:22px;box-shadow:var(--shadow-lg);margin:12px 0;position:relative;overflow:hidden}
+  @media (prefers-color-scheme: dark){.calc{background:#e9efec;color:#121714}}
+  .calc::after{content:"";position:absolute;right:-50px;bottom:-80px;width:200px;height:200px;border-radius:50%;border:36px solid rgba(52,196,141,.18);pointer-events:none}
+  .calc .row{display:flex;gap:12px;flex-wrap:wrap;align-items:end;position:relative;z-index:1}
+  .calc label{font-size:12px;font-weight:800;letter-spacing:.06em;opacity:.65;display:block;margin-bottom:6px}
+  .calc select,.calc input{font-size:15px;padding:10px 12px;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(255,255,255,.08);color:inherit;min-height:44px;font-weight:600}
+  @media (prefers-color-scheme: dark){.calc select,.calc input{border-color:rgba(0,0,0,.15);background:rgba(0,0,0,.05)}}
+  .calc select{min-width:220px;max-width:100%}
+  .calc input{width:128px}
+  .calc .btn{background:var(--accent);border-color:var(--accent);color:#fff;min-height:44px;border-radius:12px;padding:10px 18px}
+  @media (prefers-color-scheme: dark){.calc .btn{color:#07120d}}
+  .calc .out{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px;position:relative;z-index:1}
+  @media(max-width:640px){.calc .out{grid-template-columns:1fr 1fr}}
+  .calc .out div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:13px 14px}
+  @media (prefers-color-scheme: dark){.calc .out div{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.08)}}
+  .calc .out div b{display:block;font-size:23px;letter-spacing:-.03em;line-height:1.1}
+  .calc .out div span{font-size:12px;opacity:.6;font-weight:600}
+  .calc .tiny{color:inherit;opacity:.6;position:relative;z-index:1}
+
+  .log{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:6px 18px;box-shadow:var(--shadow);margin:12px 0}
+  .log div{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.65;flex-wrap:wrap}
   .log div:last-child{border-bottom:none}
-  .log .d{font-weight:800;color:var(--accent);white-space:nowrap}
-  footer{margin-top:44px;border-top:1px solid var(--line);padding-top:16px;color:var(--ink3);font-size:13px}
-  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);
-    padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:88vw;text-align:center}
+  .log .d{font-weight:900;color:var(--accent);white-space:nowrap;font-size:13px;background:var(--accent-soft);padding:2px 9px;border-radius:999px;height:fit-content}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:var(--ink3);font-size:12.5px;line-height:1.7}
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:88vw;text-align:center;box-shadow:var(--shadow-lg)}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 <div class="topbar"><div class="topbar-in">
-  <span class="t">代充比价 · 分享版</span>
-  <span class="date">价格核实：2026-11-20（北京时间）</span>
+  <span class="mark">¥</span>
+  <span class="t">代充比价<small>PRICE CHECK · 分享版</small></span>
   <span class="sp"></span>
-  <button class="btn ghost" id="refreshBtn" type="button">刷新价格</button>
+  <span class="date-pill">核实 2026-11-20 · 北京时间</span>
+  <button class="btn ghost" id="refreshBtn" type="button">↻ 刷新整理</button>
 </div></div>
 
 <div class="wrap">
-  <h1>五类代充最低价对比</h1>
-  <p class="lede">只比能用<strong>微信 / 支付宝</strong>付款的渠道：ChatGPT、Claude、Gemini、多邻国、X。每个品类逐站比价，最低价高亮，点渠道名直达下单页。价格每天核一次，本页是 2026-11-20 的核实快照，下单前请在站内再核一眼实时价。</p>
+  <section class="hero">
+    <div class="hero-top"><span class="hero-badge">每日核价</span><span class="hero-badge2">只比微信 / 支付宝能付的渠道</span><span class="hero-badge2">点渠道名直达下单</span></div>
+    <h1>五类代充<br><em>最低价</em>对比</h1>
+    <p class="lede">ChatGPT、Claude、Gemini、多邻国、X —— 每个品类逐站比价，最低价高亮。本页是 <strong>2026-11-20 的核实快照</strong>，价格每天核一次，下单前请在站内再核一眼实时价。</p>
+    <div class="hero-meta">
+      <div><b class="num">5 类</b><span>在比品类</span></div>
+      <div><b class="num">9 款</b><span>具体套餐</span></div>
+      <div><b class="num">13 家</b><span>渠道总表</span></div>
+      <div><b>微信 · 支付宝</b><span>可用支付</span></div>
+    </div>
+  </section>
 
   <nav class="quick">
-    <a href="#compare">逐站比价</a><a href="#channels">渠道链接总表</a><a href="#ph">菲区怎么用</a>
+    <a href="#compare">逐站比价</a><a href="#channels">渠道总表</a><a href="#ph">菲区怎么用</a>
     <a href="#precheck">接单预检</a><a href="#risks">风险与话术</a><a href="#flow">操作流程</a><a href="#calc">利润计算器</a>
   </nav>
 
+  <div class="sec-head"><h2>今日最低进货价</h2><span class="sub">每类只取一个最低 · 点下方逐站比价看全部</span></div>
   <div class="lowest" id="lowestStrip"></div>
 
-  <div class="notice"><b>定价规矩（本页卖价按此执行）：</b>每单赚 ¥20–100；Claude 可以多赚一点；ChatGPT 完全跟国内市场价走 —— Plus ¥168、Pro 100 ¥850、Pro 200 ¥1,300；Claude Pro ¥249、Max 5x ¥999。</div>
+  <div class="rule">
+    <div><h4>定价规矩 · 总则</h4><p>每单赚 <b>¥20–100</b>，不打价格战到底。Claude 可以多赚一点。</p></div>
+    <div><h4>ChatGPT · 完全跟市场价</h4><p>Plus <b>¥168</b> · Pro 100 <b>¥850</b> · Pro 200 <b>¥1,300</b></p></div>
+    <div><h4>Claude · 已定价</h4><p>Pro <b>¥249</b> · Max 5x <b>¥999</b></p></div>
+  </div>
 
-  <h2 id="compare">逐站比价 <span class="sub">同一品类内按价格从低到高，最低价高亮</span></h2>
+  <div class="sec-head" id="compare"><h2>逐站比价</h2><span class="sub">同品类内按价格从低到高 · 最低价高亮</span></div>
+  <div class="filters" id="catFilters">
+    <button type="button" class="on" data-f="all">全部</button>
+    <button type="button" data-f="ChatGPT">ChatGPT</button>
+    <button type="button" data-f="Claude">Claude</button>
+    <button type="button" data-f="Gemini">Gemini</button>
+    <button type="button" data-f="多邻国">多邻国</button>
+    <button type="button" data-f="X">X</button>
+  </div>
   <div id="compareRoot"></div>
 
-  <h2 id="channels">渠道链接总表 <span class="sub">点站名直达下单页；没有公开下单页的渠道如实标注，不编链接</span></h2>
+  <div class="sec-head" id="channels"><h2>渠道链接总表</h2><span class="sub">点站名直达 · 无公开下单页的如实标注</span></div>
   <div class="tbl-wrap"><table>
     <thead><tr><th>渠道</th><th>类型</th><th>在售品类</th><th>支付</th><th>备注</th></tr></thead>
     <tbody>
-      <tr><td data-l="渠道"><a href="https://16688.com.cn" target="_blank" rel="noopener"><b>16688 发卡平台</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT / Claude / Gemini / 多邻国等全品类</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">进站搜店铺号 <b>S571979</b>；菲区卡充、官网直充、Pro 菲区直充都在这进货</td></tr>
-      <tr><td data-l="渠道"><a href="https://wzyp.cn" target="_blank" rel="noopener"><b>链动小铺</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT 等多品类（多家店铺）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i></span></td><td data-l="备注">老域名 ldxp.cn 会自动跳到 wzyp.cn；平台是店铺集合，进站后进具体店挑货，店铺页形如 wzyp.cn/shop/…；据店铺说明仅支持微信</td></tr>
-      <tr><td data-l="渠道"><a href="https://okai66.com" target="_blank" rel="noopener"><b>OKAI66</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">在线付款另收约 2% 手续费；加客服下单免手续费；失败原路退款</td></tr>
-      <tr><td data-l="渠道"><a href="https://www.ezsub.com/subscription/chatgpt-recharge" target="_blank" rel="noopener"><b>EzSub</b></a></td><td data-l="类型">直充（自助）</td><td data-l="品类">ChatGPT Plus / Pro、Codex 点数</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">此链接是真正的下单站（不是介绍博客页）；站内以美元标价，支持微信 / 支付宝付款；自助提交账号信息开通，约 15 分钟</td></tr>
-      <tr><td data-l="渠道"><a href="https://uppluspro.com/recharge" target="_blank" rel="noopener"><b>UpPlusPro</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">Pro 100 ¥710 是本轮核到的全网低价之一，下单前再核实时价</td></tr>
-      <tr><td data-l="渠道"><a href="https://xiaoxiao.pro" target="_blank" rel="noopener"><b>小小AI</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注">加企业微信客服下单</td></tr>
-      <tr><td data-l="渠道"><a href="https://claudemax.shop" target="_blank" rel="noopener"><b>ClaudeMax</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude Pro / Max 5x / Max 20x</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i></span></td><td data-l="备注">Max 5x 代充 ¥999；Pro 代充时有售罄，下单前看站内状态</td></tr>
-      <tr><td data-l="渠道"><a href="https://littlemagic8.github.io/gptplus/purchase-grok.html" target="_blank" rel="noopener"><b>Littlemagic8</b></a></td><td data-l="类型">卡密自助</td><td data-l="品类">X（新版 X Subscription / Grok）、ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">此链接为核实过的 X Premium ¥89 购买页；买卡密后在充值系统提交 sso 自助到账，不交账号密码</td></tr>
-      <tr><td data-l="渠道"><a href="https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html" target="_blank" rel="noopener"><b>瑶瑶商城</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude / Gemini / ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注">Claude Pro ¥159、Gemini Pro 6 个月 ¥99 在这家较便宜；链接为其说明页，内有商城入口</td></tr>
-      <tr><td data-l="渠道"><a href="https://www.dunling.com/gemini" target="_blank" rel="noopener"><b>盾灵</b></a></td><td data-l="类型">直充</td><td data-l="品类">Gemini（Google AI Pro / Ultra）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注">Pro 6 个月 ¥88（含服务费），质保 2 个月；价格更新于 2026-11-17</td></tr>
-      <tr><td data-l="渠道"><b>菲区渠道</b>（卡充 / 直充）</td><td data-l="类型">进货（经店家）</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><b>无公开下单页</b>，在 16688 平台内找菲区商品下单；下单前向渠道方索要链接并核对</td></tr>
-      <tr><td data-l="渠道"><b>教育认证渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">Gemini 教育优惠等</td><td data-l="支付">—</td><td data-l="备注"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</td></tr>
-      <tr><td data-l="渠道"><b>土耳其区渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">多邻国等区域价商品</td><td data-l="支付">—</td><td data-l="备注"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</td></tr>
+      <tr><td data-l="渠道"><a href="https://16688.com.cn" target="_blank" rel="noopener"><b>16688 发卡平台</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT / Claude / Gemini / 多邻国等全品类</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">进站搜店铺号 <b>S571979</b>；菲区卡充、官网直充、Pro 菲区直充都在这进货</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://wzyp.cn" target="_blank" rel="noopener"><b>链动小铺</b></a></td><td data-l="类型">进货</td><td data-l="品类">ChatGPT 等多品类（多家店铺）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">老域名 ldxp.cn 会自动跳到 wzyp.cn；平台是店铺集合，进站后进具体店挑货，店铺页形如 wzyp.cn/shop/…；据店铺说明仅支持微信</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://okai66.com" target="_blank" rel="noopener"><b>OKAI66</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">在线付款另收约 2% 手续费；加客服下单免手续费；失败原路退款</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://www.ezsub.com/subscription/chatgpt-recharge" target="_blank" rel="noopener"><b>EzSub</b></a></td><td data-l="类型">直充（自助）</td><td data-l="品类">ChatGPT Plus / Pro、Codex 点数</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">此链接是真正的下单站（不是介绍博客页）；站内以美元标价，支持微信 / 支付宝付款；自助提交账号信息开通，约 15 分钟</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://uppluspro.com/recharge" target="_blank" rel="noopener"><b>UpPlusPro</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">Pro 100 ¥710 是本轮核到的全网低价之一，下单前再核实时价</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://xiaoxiao.pro" target="_blank" rel="noopener"><b>小小AI</b></a></td><td data-l="类型">直充</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注"><span class="note">加企业微信客服下单</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://claudemax.shop" target="_blank" rel="noopener"><b>ClaudeMax</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude Pro / Max 5x / Max 20x</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i></span></td><td data-l="备注"><span class="note">Max 5x 代充 ¥999；Pro 代充时有售罄，下单前看站内状态</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://littlemagic8.github.io/gptplus/purchase-grok.html" target="_blank" rel="noopener"><b>Littlemagic8</b></a></td><td data-l="类型">卡密自助</td><td data-l="品类">X（新版 X Subscription / Grok）、ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">此链接为核实过的 X Premium ¥89 购买页；买卡密后在充值系统提交 sso 自助到账，不交账号密码</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://kw.yaoyao.chat/guide/claude-daichong-kaopu.html" target="_blank" rel="noopener"><b>瑶瑶商城</b></a></td><td data-l="类型">直充</td><td data-l="品类">Claude / Gemini / ChatGPT</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note">Claude Pro ¥159、Gemini Pro 6 个月 ¥99 在这家较便宜；链接为其说明页，内有商城入口</span></td></tr>
+      <tr><td data-l="渠道"><a href="https://www.dunling.com/gemini" target="_blank" rel="noopener"><b>盾灵</b></a></td><td data-l="类型">直充</td><td data-l="品类">Gemini（Google AI Pro / Ultra）</td><td data-l="支付"><span class="pay"><i class="wx">微信</i><i class="ali">支付宝</i></span></td><td data-l="备注"><span class="note">Pro 6 个月 ¥88（含服务费），质保 2 个月；价格更新于 2026-11-17</span></td></tr>
+      <tr><td data-l="渠道"><b>菲区渠道</b>（卡充 / 直充）</td><td data-l="类型">进货（经店家）</td><td data-l="品类">ChatGPT Plus / Pro</td><td data-l="支付"><span class="pay"><i class="ali">支付宝</i><i class="wx">微信</i></span></td><td data-l="备注"><span class="note"><b>无公开下单页</b>，在 16688 平台内找菲区商品下单；下单前向渠道方索要链接并核对</span></td></tr>
+      <tr><td data-l="渠道"><b>教育认证渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">Gemini 教育优惠等</td><td data-l="支付">—</td><td data-l="备注"><span class="note"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</span></td></tr>
+      <tr><td data-l="渠道"><b>土耳其区渠道</b></td><td data-l="类型">进货（经店家）</td><td data-l="品类">多邻国等区域价商品</td><td data-l="支付">—</td><td data-l="备注"><span class="note"><b>无公开下单页</b>，下单前向渠道方索要链接并核对</span></td></tr>
     </tbody>
   </table></div>
-  <p class="tiny">说明：16688 与链动小铺都是发卡 / 店铺平台，同一平台内不同店铺价格、质保不一样，进货时认准店铺和商品说明，不要只看平台名。</p>
+  <p class="tiny" style="margin-top:8px">说明：16688 与链动小铺都是发卡 / 店铺平台，同一平台内不同店铺价格、质保不一样，进货时认准店铺和商品说明，不要只看平台名。</p>
 
-  <h2 id="ph">菲区渠道怎么用 <span class="sub">卖家不用自己碰菲律宾 IP 和外卡，买现成卡 / 直充，让店家操作</span></h2>
+  <div class="sec-head" id="ph"><h2>菲区渠道怎么用</h2><span class="sub">不用自己碰菲律宾 IP 和外卡 · 买现成卡 / 直充</span></div>
   <div class="two">
     <div class="card">
       <h3>方式一：菲区卡充（卡密自兑）</h3>
@@ -234,9 +321,9 @@
   </div>
   <div class="card">
     <h3>差价从哪来（2026-11 核实数字）</h3>
-    <p>菲律宾区官方价：Plus ₱1,100/月（含 12% 税），Pro 200 ₱8,919.64/月，按 11 月汇率折合约 <b>¥931</b>；美区 Pro 200 是 $200，折合约 <b>¥1,336</b>，差 ¥400 多。店家菲区稳渠道做到 Pro 100 ¥755.20、Pro 200 ¥1,212，你卖 ¥850 / ¥1,300，每单约 ¥90–95 毛利。</p>
-    <p><b>Plus 别死磕菲区：</b>16688 官网正价直充 ¥132.23 反而比菲区卡充 ¥134.81 便宜，竑予 ¥120.5 更低。Plus 走官网直充，Pro 走菲区直充。</p>
-    <h3 style="margin-top:12px">进阶：自己动手充菲区（不用店家时）</h3>
+    <p style="font-size:14.5px">菲律宾区官方价：Plus ₱1,100/月（含 12% 税），Pro 200 ₱8,919.64/月，按 11 月汇率折合约 <b>¥931</b>；美区 Pro 200 是 $200，折合约 <b>¥1,336</b>，差 ¥400 多。店家菲区稳渠道做到 Pro 100 ¥755.20、Pro 200 ¥1,212，你卖 ¥850 / ¥1,300，每单约 ¥90–95 毛利。</p>
+    <p style="font-size:14.5px"><b>Plus 别死磕菲区：</b>16688 官网正价直充 ¥132.23 反而比菲区卡充 ¥134.81 便宜，竑予 ¥120.5 更低。Plus 走官网直充，Pro 走菲区直充。</p>
+    <h3 style="margin-top:14px">进阶：自己动手充菲区（不用店家时）</h3>
     <ol>
       <li>备菲律宾 IP，全程全局模式，住宅 IP 更稳，机房 IP 容易被风控拦；</li>
       <li>无痕模式打开 chatgpt.com，确认价格显示 ₱1,100 而不是美元；</li>
@@ -246,7 +333,7 @@
     </ol>
   </div>
 
-  <h2 id="precheck">接单前预检清单 <span class="sub">收款前先问完这四件事，能省掉绝大多数售后</span></h2>
+  <div class="sec-head" id="precheck"><h2>接单前预检清单</h2><span class="sub">收款前先问完这四件事 · 省掉绝大多数售后</span></div>
   <div class="checklist"><ul>
     <li><b>账号现在是 Free 吗？</b><span>让买家打开 chatgpt.com → 左下角头像 → 设置 → 订阅。显示 Free 才能充卡充 / 多数直充；显示 Plus / Pro 和到期日，要先取消自动续费、等刷回 Free。</span></li>
     <li><b>账号在 Team 空间里吗？</b><span>设置 → 工作区 / 团队里有 Team 名字就是在团队里，个人卡充不进去，要先退出 Team 或换个人号。</span></li>
@@ -254,10 +341,10 @@
     <li><b>以前用美元付过费吗？</b><span>让买家看设置 → 账单记录：用美元付过费的号币种会被锁死，走不了菲区价；有 $0 订单或欠费账单的，也先如实告诉你再定渠道。</span></li>
   </ul></div>
 
-  <h2 id="risks">风险说明与买家问答 <span class="sub">每种情况：出什么问题、为什么、买家怎么查、你怎么回（话术可一键复制）</span></h2>
+  <div class="sec-head" id="risks"><h2>风险说明与买家问答</h2><span class="sub">问题 · 原因 · 怎么查 · 一键复制话术</span></div>
   <div class="grid" id="riskGrid"></div>
 
-  <h2 id="flow">完整操作流程 <span class="sub">从准备到售后，照着走就能开张</span></h2>
+  <div class="sec-head" id="flow"><h2>完整操作流程</h2><span class="sub">从准备到售后 · 照着走就能开张</span></div>
   <div class="steps">
     <div class="step"><div class="n">1</div><div>
       <h3>备齐账号、软件和启动资金（约 ¥600）</h3>
@@ -305,13 +392,13 @@
       </ul></div></div>
   </div>
 
-  <h2 id="calc">利润计算器 <span class="sub">选品类、改卖价，立刻算每单 / 10 单 / 100 单利润；可把卖价应用回上方价目表（仅本次打开有效）</span></h2>
+  <div class="sec-head" id="calc"><h2>利润计算器</h2><span class="sub">改卖价立刻算利润 · 可应用回价目表（仅本次打开有效）</span></div>
   <div class="calc">
     <div class="row">
       <div><label for="calcProduct">品类</label><select id="calcProduct"></select></div>
       <div><label for="calcCost">进货价（¥）</label><input id="calcCost" type="number" min="0" step="0.01" /></div>
       <div><label for="calcSell">闲鱼卖价（¥）</label><input id="calcSell" type="number" min="0" step="1" /></div>
-      <div><button class="btn" id="applySell" type="button">应用到价目表</button></div>
+      <div><button class="btn" id="applySell" type="button">应用到价目表 ↑</button></div>
     </div>
     <div class="out">
       <div><b class="num" id="outOne">—</b><span>每单利润</span></div>
@@ -319,10 +406,10 @@
       <div><b class="num" id="out10">—</b><span>10 单利润</span></div>
       <div><b class="num" id="out100">—</b><span>100 单利润</span></div>
     </div>
-    <p class="tiny" id="calcHint" style="margin-top:10px"></p>
+    <p class="tiny" id="calcHint" style="margin-top:12px"></p>
   </div>
 
-  <h2>核价记录</h2>
+  <h2 class="plain">核价记录</h2>
   <div class="log">
     <div><span class="d">2026-11-20</span><span>全渠道复核：新增链动小铺（wzyp.cn）、UpPlusPro、小小AI 进总表；EzSub 改链真正的下单站 ezsub.com；Littlemagic8 的 X Premium ¥89 购买页已核实可打开。</span></div>
     <div><span class="d">2026-11-16</span><span>16688 店铺价核对：Plus 官网直充 ¥132.23、菲区卡充 ¥134.81、iOS 美区 ¥146.40；链动小铺 Plus 菲区卡充 ¥139.50。</span></div>
@@ -451,11 +538,11 @@ function lowestOffer(p){
   return best;
 }
 function sellOf(p){ return p.sell!=null?p.sell:p.sellSuggest; }
-
+var curFilter="all";
 function renderCompare(){
   var root=document.getElementById("compareRoot");
   var html="";
-  PRODUCTS.forEach(function(p){
+  PRODUCTS.filter(function(p){return curFilter==="all"||p.cat===curFilter;}).forEach(function(p){
     var best=lowestOffer(p), sell=sellOf(p);
     var rows=p.offers.slice().sort(function(a,b){
       var av=a.price==null?Infinity:a.price, bv=b.price==null?Infinity:b.price;
@@ -469,33 +556,39 @@ function renderCompare(){
       return '<tr class="'+(isBest?"best":"")+'"><td data-l="渠道">'+name+(isBest?'<span class="tag best">最低价</span>':"")+'</td>'+
         '<td data-l="价格" class="price num">'+price+'</td>'+
         '<td data-l="支付">'+payHTML(o.pay)+'</td>'+
-        '<td data-l="备注"><span class="note" style="display:inline;font-size:13px">'+note+'</span></td></tr>';
+        '<td data-l="备注"><span class="note">'+note+'</span></td></tr>';
     }).join("");
     var profit = (best&&sell!=null)? sell-best.price : null;
-    html += '<h3 style="margin:20px 0 2px">'+p.cat+' · '+p.name+'</h3>'+
+    html += '<div class="prod"><div class="prod-head"><span class="cat-chip">'+p.cat+'</span><h3>'+p.name+'</h3>'+
+      '<span class="sell-pill"><span>闲鱼卖价 <b class="num sell-val" data-pid="'+p.id+'">'+(sell!=null?money(sell):"—")+'</b> <span class="tiny">('+p.sellNote+')</span></span>'+
+      (profit!=null?'<span class="profit">毛利约 '+money(profit)+' / 单</span>':"")+'</span></div>'+
       '<div class="tbl-wrap"><table><thead><tr><th>渠道（点名字去下单）</th><th>进货价</th><th>支付</th><th>备注 / 手续费 / 限制</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-      '<div class="sellbox"><span>闲鱼卖价：<b class="num sell-val" data-pid="'+p.id+'">'+(sell!=null?money(sell):"—")+'</b> <span class="tiny">（'+p.sellNote+'）</span></span>'+
-      (profit!=null?'<span>按最低进货价，单笔毛利约 <b class="num">'+money(profit)+'</b></span>':"")+'</div>'+
-      (p.marginNote?'<p class="tiny" style="margin:2px 2px 0">'+p.marginNote+'</p>':"")+
-      (p.refNote?'<p class="tiny" style="margin:2px 2px 0">'+p.refNote+'</p>':"");
+      (p.marginNote?'<p class="tiny" style="margin:7px 2px 0">'+p.marginNote+'</p>':"")+
+      (p.refNote?'<p class="tiny" style="margin:7px 2px 0">'+p.refNote+'</p>':"")+'</div>';
   });
-  root.innerHTML=html;
+  root.innerHTML=html || '<p class="small">该分类暂无条目。</p>';
 }
+document.getElementById("catFilters").addEventListener("click",function(e){
+  var b=e.target.closest("button[data-f]"); if(!b) return;
+  curFilter=b.getAttribute("data-f");
+  this.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b)});
+  renderCompare();
+});
 function renderLowest(){
   var el=document.getElementById("lowestStrip");
   el.innerHTML = PRODUCTS.filter(function(p){return ["gpt-plus","claude-pro","gemini-pro","duo-seat","x-premium"].indexOf(p.id)>=0;}).map(function(p){
     var b=lowestOffer(p);
     return '<div class="low-card"><div class="cat">'+p.cat+'</div><div class="plan">'+p.name+'</div>'+
-      '<div class="price num">'+(b?money(b.price):"—")+'</div><div class="from">最低进货 · '+(b?b.ch:"")+'</div></div>';
+      '<div class="price num"><i>¥</i>'+(b?Number(b.price).toLocaleString("zh-CN",{minimumFractionDigits:(b.price%1?2:0)}):"—")+'</div><div class="from">最低进货 · '+(b?b.ch:"")+'</div></div>';
   }).join("");
 }
 function renderRisks(){
   document.getElementById("riskGrid").innerHTML = RISKS.map(function(r,i){
-    return '<div class="card"><h3>'+(i+1)+'. '+r.t+'</h3>'+
+    return '<div class="card"><h3><span class="risk-num">'+(i+1)+'</span>'+r.t+'</h3>'+
       '<p class="why"><b>出什么问题：</b>'+r.why+'</p>'+
       '<p class="check"><b>买家怎么查：</b>'+r.check+'</p>'+
       '<div class="script">'+r.script+'</div>'+
-      '<div class="foot"><span class="warranty">质保口径：'+r.war+'</span>'+
+      '<div class="foot"><span class="warranty">质保：'+r.war+'</span>'+
       '<button class="copy-btn" type="button" data-script="'+i+'">复制话术</button></div></div>';
   }).join("");
 }
@@ -519,13 +612,11 @@ document.addEventListener("click",function(e){
   }
 });
 
-/* calculator */
 var calcSel=document.getElementById("calcProduct"), calcCost=document.getElementById("calcCost"), calcSell=document.getElementById("calcSell");
 PRODUCTS.forEach(function(p){
   var opt=document.createElement("option"); opt.value=p.id; opt.textContent=p.cat+" · "+p.name; calcSel.appendChild(opt);
 });
 function calcUpdate(){
-  var p=PRODUCTS.filter(function(x){return x.id===calcSel.value})[0];
   var cost=parseFloat(calcCost.value), sell=parseFloat(calcSell.value);
   var hint=document.getElementById("calcHint");
   if(isNaN(cost)||isNaN(sell)){ hint.textContent="填上进货价和卖价就能算。"; return; }
@@ -536,7 +627,7 @@ function calcUpdate(){
   document.getElementById("out100").textContent=money(one*100);
   hint.textContent = one<0 ? "注意：这个卖价低于进货价，是亏的。" :
     (one<20 ? "提醒：单笔利润低于 ¥20，不在定的 ¥20–100 区间里。" :
-    (one>100 ? "提醒：单笔利润超过 ¥100，偏离定的区间；Claude 可以多赚一点，其它品类注意别把价格打飞了。" : "在定的 ¥20–100/单 区间内。"));
+    (one>100 ? "提醒：单笔利润超过 ¥100，偏离定的区间；Claude 可以多赚一点，其它品类注意别把价格打飞了。" : "✓ 在定的 ¥20–100/单 区间内。"));
 }
 function calcLoad(){
   var p=PRODUCTS.filter(function(x){return x.id===calcSel.value})[0];
